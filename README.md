@@ -97,6 +97,7 @@ Here is a screenshot of the dashboard:
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+
 This project is a fork of the Raspberry Pi monitoring solution by oijnk (https://github.com/oijkn/Docker-Raspberry-PI-Monitoring)
 
 ## Troubleshooting

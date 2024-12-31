@@ -1,14 +1,10 @@
-# Raspberry Pi & Docker Monitoring
-
-## Hit the Star! :star:
-
-If you find this repository useful, please consider giving it a star. Your support is greatly appreciated! :pray:
+# Server & Docker Monitoring
 
 ## Introduction
 
-Introducing the Raspberry Pi monitoring solution using Grafana, Prometheus, Cadvisor, and Node-Exporter Stack! This project aims to provide a comprehensive and user-friendly way to monitor the performance of your Raspberry Pi. With Grafana's intuitive dashboards, you can easily visualize system metrics collected by Prometheus and Cadvisor, while Node-Exporter provides valuable information about the Raspberry Pi's hardware and operating system. The combination of these tools results in a powerful and efficient monitoring solution that will give you complete visibility into your system's health. Check out the project and take your Raspberry Pi monitoring to the next level !
+Introducing the server monitoring solution using Grafana, Prometheus, Cadvisor, and Node-Exporter Stack! This project aims to provide a comprehensive and user-friendly way to monitor the performance of your server. With Grafana's intuitive dashboards, you can easily visualize system metrics collected by Prometheus and Cadvisor, while Node-Exporter provides valuable information about the server hardware and operating system. The combination of these tools results in a powerful and efficient monitoring solution that will give you complete visibility into your system's health. Check out the project and take your server monitoring to the next level !
 
-This repository contains a `docker-compose` file to run a Raspberry PI monitoring stack. It is based on the following projects:
+This repository contains a `docker-compose` file to run a monitoring stack. It is based on the following projects:
 - [Prometheus](https://prometheus.io/)
 - [Grafana](http://grafana.org/)
 - [cAdvisor](https://github.com/google/cadvisor)
@@ -19,7 +15,7 @@ This repository contains a `docker-compose` file to run a Raspberry PI monitorin
 Before we get started installing the stack, we need to make sure that the following prerequisites are met:
 - Docker is installed on the host machine
 - Docker Compose is installed on the host machine
-- The host machine is running a Raspberry PI OS or any other compatible Linux distribution
+- The host machine is running a compatible Linux distribution
 
 ## Installation and Configuration
 
@@ -27,12 +23,12 @@ To install the stack, follow the steps below:
 
 - Clone this repository to your host machine.
 ```bash
-git clone https://github.com/oijkn/Docker-Raspberry-PI-Monitoring.git
+git clone https://github.com/oliveres/server-docker-monitoring.git
 ```
 
 - Enter to the cloned directory.
 ```bash
-cd Docker-Raspberry-PI-Monitoring
+cd server-docker-monitoring
 ```
 
  - Create `data` directory and change the ownership of the `prometheus` and `grafana` folders for a nice and clean installation.
@@ -93,7 +89,7 @@ If you would like to install this dashboard from Grafana.com, simply follow the 
 
 Or you can follow the steps described in the [Grafana Documentation](https://grafana.com/docs/grafana/latest/dashboards/manage-dashboards/#import-a-dashboard).
 
-This dashboard is intended to help you get started with monitoring your Raspberry PI devices. If you have any changes or suggestions, you would like to see, please feel free to open an issue or create a pull request.
+This dashboard is intended to help you get started with monitoring your server. If you have any changes or suggestions, you would like to see, please feel free to open an issue or create a pull request.
 
 Here is a screenshot of the dashboard:
 ![Grafana Dashboard](grafana/screenshots/dashboard.png)
@@ -101,6 +97,7 @@ Here is a screenshot of the dashboard:
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+This project is a fork of the Raspberry Pi monitoring solution by oijnk (https://github.com/oijkn/Docker-Raspberry-PI-Monitoring)
 
 ## Troubleshooting
 

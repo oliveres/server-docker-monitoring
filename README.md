@@ -10,6 +10,8 @@ This repository contains a `docker-compose` file to run a monitoring stack. It i
 - [cAdvisor](https://github.com/google/cadvisor)
 - [NodeExporter](https://github.com/prometheus/node_exporter)
 
+This repository is compatible with Portainer Stack deployment.
+
 ## Prerequisites
 
 Before we get started installing the stack, we need to make sure that the following prerequisites are met:

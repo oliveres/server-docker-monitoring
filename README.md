@@ -19,6 +19,7 @@ Before we get started installing the stack, we need to make sure that the follow
 
 ## Repository structure
 
+```
 .
 ├── docker-compose.yml
 ├── grafana/
@@ -30,6 +31,7 @@ Before we get started installing the stack, we need to make sure that the follow
 └── prometheus/
     ├── Dockerfile
     └── prometheus.yml
+```
 
 ## Installation and Configuration
 

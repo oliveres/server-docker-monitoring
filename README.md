@@ -17,6 +17,20 @@ Before we get started installing the stack, we need to make sure that the follow
 - Docker Compose is installed on the host machine
 - The host machine is running a compatible Linux distribution
 
+## Repository structure
+
+.
+├── docker-compose.yml
+├── grafana/
+│   ├── Dockerfile
+│   ├── .env
+│   └── provisioning/
+│       ├── dashboards/
+│       └── datasources/
+└── prometheus/
+    ├── Dockerfile
+    └── prometheus.yml
+
 ## Installation and Configuration
 
 To install the stack, follow the steps below:

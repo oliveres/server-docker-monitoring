@@ -1,14 +1,16 @@
-# Server & Docker Monitoring
+# Server & Docker Monitoring with Logs
 
 ## Introduction
 
-Introducing the server monitoring solution using Grafana, Prometheus, Cadvisor, and Node-Exporter Stack! This project aims to provide a comprehensive and user-friendly way to monitor the performance of your server. With Grafana's intuitive dashboards, you can easily visualize system metrics collected by Prometheus and Cadvisor, while Node-Exporter provides valuable information about the server hardware and operating system. The combination of these tools results in a powerful and efficient monitoring solution that will give you complete visibility into your system's health. Check out the project and take your server monitoring to the next level !
+Introducing the server monitoring solution using Grafana, Prometheus, Loki, Promtail, Cadvisor, and Node-Exporter Stack! This project aims to provide a comprehensive and user-friendly way to monitor the performance of your server and view container logs in real-time. With Grafana's intuitive dashboards, you can easily visualize system metrics collected by Prometheus and Cadvisor, while Node-Exporter provides valuable information about the server hardware and operating system. Loki and Promtail add powerful log aggregation capabilities, allowing you to view and search through container logs directly in Grafana. The combination of these tools results in a powerful and efficient monitoring solution that will give you complete visibility into your system's health and application logs. Check out the project and take your server monitoring to the next level!
 
 This repository contains a `docker-compose` file to run a monitoring stack. It is based on the following projects:
-- [Prometheus](https://prometheus.io/)
-- [Grafana](http://grafana.org/)
-- [cAdvisor](https://github.com/google/cadvisor)
-- [NodeExporter](https://github.com/prometheus/node_exporter)
+- [Prometheus](https://prometheus.io/) - Metrics collection and storage
+- [Grafana](http://grafana.org/) - Visualization and dashboards
+- [Loki](https://grafana.com/oss/loki/) - Log aggregation system
+- [Promtail](https://grafana.com/docs/loki/latest/clients/promtail/) - Log collector for Docker containers
+- [cAdvisor](https://github.com/google/cadvisor) - Container metrics
+- [NodeExporter](https://github.com/prometheus/node_exporter) - Host metrics
 
 This repository is compatible with Portainer Stack deployment.
 
@@ -29,10 +31,21 @@ Before we get started installing the stack, we need to make sure that the follow
 │   ├── .env
 │   └── provisioning/
 │       ├── dashboards/
+│       │   ├── dashboard.yml
+│       │   ├── rpi-monitoring.json
+│       │   └── container-logs.json
 │       └── datasources/
-└── prometheus/
+│           ├── datasource.yml
+│           └── loki-datasource.yml
+├── prometheus/
+│   ├── Dockerfile
+│   └── prometheus.yml
+├── loki/
+│   ├── Dockerfile
+│   └── loki-config.yaml
+└── promtail/
     ├── Dockerfile
-    └── prometheus.yml
+    └── promtail-config.yaml
 ```
 
 ## Installation and Configuration
@@ -63,12 +76,14 @@ docker-compose up -d
 
 This will start all the containers and make them available on the host machine.
 <br/>The following ports are used (only Grafana is exposed on the host machine):
-- 3000: Grafana
-- 9090: Prometheus
-- 8080: cAdvisor
-- 9100: NodeExporter
+- 3000: Grafana (mapped to 3001 on host)
+- 9090: Prometheus (internal)
+- 3100: Loki (internal)
+- 9080: Promtail (internal)
+- 8080: cAdvisor (internal)
+- 9100: NodeExporter (internal)
 
-The Grafana dashboard can be accessed by navigating to `http://<host-ip>:3000` in your browser for example `http://192.168.1.100:3000`.
+The Grafana dashboard can be accessed by navigating to `http://<host-ip>:3001` in your browser for example `http://192.168.1.100:3001`.
 <br/>The default username and password are both `admin`. You will be prompted to change the password on the first login.
 <br/>Credentials can be changed by editing the [.env](grafana/.env) file.
 
@@ -93,7 +108,28 @@ docker logs -f <container-name>
 Since Grafana v5 has introduced the concept of provisioning, it is possible to automatically add data sources and dashboards to Grafana.
 <br/>This is done by placing the `datasources` and `dashboards` directories in the [provisioning](grafana/provisioning) folder. The files in these directories are automatically loaded by Grafana on startup.
 
+The stack comes pre-configured with:
+- **Prometheus datasource** - for metrics visualization
+- **Loki datasource** - for log aggregation and search
+- **System monitoring dashboard** - displays host and container metrics
+- **Container logs dashboard** - displays real-time logs from all containers
+
 If you like to add a new dashboard, simply place the JSON file in the [dashboards](grafana/provisioning/dashboards) directory, and it will be automatically loaded next time Grafana is started.
+
+## Viewing Container Logs
+
+The stack includes Loki and Promtail for log aggregation:
+
+1. Navigate to Grafana at `http://<host-ip>:3001`
+2. Go to **Dashboards** → **Container Logs**
+3. You can see real-time logs from all monitoring containers
+4. Use the search bar to filter logs by container name or content
+5. Alternatively, go to **Explore** and select **Loki** datasource for advanced log queries
+
+Example Loki queries:
+- `{container="monitoring-grafana"}` - Show logs from Grafana container
+- `{job="docker"} |= "error"` - Show all logs containing "error"
+- `{container=~"monitoring-.*"} |= "warning"` - Show warnings from all monitoring containers
 
 # Install Dashboard from Grafana.com (Optional)
 

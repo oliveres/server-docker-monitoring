@@ -17,6 +17,7 @@ services:
       - grafana-data:/var/lib/grafana
     depends_on:
       - prometheus
+      - loki
 
   cadvisor:
     # Beze změny
@@ -90,9 +91,45 @@ services:
       - cadvisor:cadvisor
       - node-exporter:node-exporter
 
+  loki:
+    build:
+      context: ./loki
+      dockerfile: Dockerfile
+    container_name: monitoring-loki
+    hostname: rpi-loki
+    restart: unless-stopped
+    command: -config.file=/etc/loki/loki-config.yaml
+    networks:
+      - internal
+    expose:
+      - 3100
+    volumes:
+      - loki-data:/tmp/loki
+
+  promtail:
+    build:
+      context: ./promtail
+      dockerfile: Dockerfile
+    container_name: monitoring-promtail
+    hostname: rpi-promtail
+    restart: unless-stopped
+    user: "0:0"
+    command: -config.file=/etc/promtail/promtail-config.yaml
+    networks:
+      - internal
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/log:/var/log:ro
+      - promtail-data:/tmp
+    depends_on:
+      - loki
+
 volumes:
   grafana-data:
   prometheus-data:
+  loki-data:
+  promtail-data:
 
 networks:
   internal:

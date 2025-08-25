@@ -1,0 +1,95 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  # Docker container logs
+  - job_name: docker
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+    relabel_configs:
+      # Only keep containers from our monitoring stack
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(monitoring-.*)'
+        action: keep
+      
+      # Extract container name without prefix
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.*)'
+        target_label: 'container'
+      
+      # Add container image
+      - source_labels: ['__meta_docker_container_image']
+        regex: '(.*)'
+        target_label: 'image'
+      
+      # Add compose project name
+      - source_labels: ['__meta_docker_container_label_com_docker_compose_project']
+        target_label: 'compose_project'
+      
+      # Add compose service name
+      - source_labels: ['__meta_docker_container_label_com_docker_compose_service']
+        target_label: 'compose_service'
+      
+      # Add hostname
+      - source_labels: ['__meta_docker_container_label_com_docker_compose_container_hostname']
+        target_label: 'hostname'
+      
+      # Add log stream (stdout/stderr)
+      - source_labels: ['__meta_docker_container_log_stream']
+        target_label: 'stream'
+      
+      # Set job name
+      - replacement: 'docker'
+        target_label: 'job'
+    
+    pipeline_stages:
+      # Extract timestamp if present in log
+      - regex:
+          expression: '^(?P<timestamp>\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?) ?(?P<message>.*)'
+      
+      - timestamp:
+          source: timestamp
+          format: RFC3339Nano
+          fallback_formats:
+            - RFC3339
+            - '2006-01-02T15:04:05.000000000Z'
+            - '2006-01-02 15:04:05'
+      
+      - labels:
+          stream:
+      
+      - output:
+          source: message
+
+  # System logs (optional - for host system logs)
+  - job_name: system
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: varlogs
+          __path__: /var/log/*log
+    pipeline_stages:
+      - regex:
+          expression: '^(?P<timestamp>\w+ \d+ \d+:\d+:\d+) (?P<hostname>\S+) (?P<service>\S+?)(?:\[(?P<pid>\d+)\])?: (?P<message>.*)'
+      
+      - labels:
+          hostname:
+          service:
+          pid:
+      
+      - timestamp:
+          source: timestamp
+          format: 'Jan 2 15:04:05'
+          location: Local
+      
+      - output:
+          source: message

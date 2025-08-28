@@ -107,7 +107,7 @@ services:
     expose:
       - 3100
     volumes:
-      - loki-data:/tmp/loki
+      - loki-data:/loki
 
   promtail:
     build:

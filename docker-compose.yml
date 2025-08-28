@@ -18,6 +18,9 @@ services:
     depends_on:
       - prometheus
       - loki
+    links:
+      - prometheus:prometheus
+      - loki:loki
 
   cadvisor:
     # Beze změny
@@ -124,6 +127,8 @@ services:
       - promtail-data:/tmp
     depends_on:
       - loki
+    links:
+      - loki:loki
 
 volumes:
   grafana-data:

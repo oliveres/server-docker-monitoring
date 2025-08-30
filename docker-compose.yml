@@ -4,7 +4,6 @@ services:
       context: ./grafana
       dockerfile: Dockerfile
     container_name: monitoring-grafana
-    hostname: rpi-grafana
     restart: unless-stopped
     user: "472"
     networks:
@@ -18,15 +17,10 @@ services:
     depends_on:
       - prometheus
       - loki
-    links:
-      - prometheus:prometheus
-      - loki:loki
 
   cadvisor:
-    # Beze změny
     container_name: monitoring-cadvisor
     image: gcr.io/cadvisor/cadvisor:latest
-    hostname: rpi-cadvisor
     restart: unless-stopped
     privileged: true
     networks:
@@ -48,10 +42,8 @@ services:
       - /etc/machine-id:/etc/machine-id:ro
 
   node-exporter:
-    # Beze změny
     container_name: monitoring-node-exporter
     image: prom/node-exporter:latest
-    hostname: rpi-exporter
     restart: unless-stopped
     networks:
       - internal
@@ -74,7 +66,6 @@ services:
       context: ./prometheus
       dockerfile: Dockerfile
     container_name: monitoring-prometheus
-    hostname: rpi-prometheus
     restart: unless-stopped
     user: "nobody"
     command:
@@ -90,16 +81,12 @@ services:
     depends_on:
       - cadvisor
       - node-exporter
-    links:
-      - cadvisor:cadvisor
-      - node-exporter:node-exporter
 
   loki:
     build:
       context: ./loki
       dockerfile: Dockerfile
     container_name: monitoring-loki
-    hostname: rpi-loki
     restart: unless-stopped
     command: -config.file=/etc/loki/loki-config.yaml
     networks:
@@ -114,7 +101,6 @@ services:
       context: ./promtail
       dockerfile: Dockerfile
     container_name: monitoring-promtail
-    hostname: rpi-promtail
     restart: unless-stopped
     user: "0:0"
     command: -config.file=/etc/promtail/promtail-config.yaml
@@ -127,8 +113,6 @@ services:
       - promtail-data:/tmp
     depends_on:
       - loki
-    links:
-      - loki:loki
 
 volumes:
   grafana-data:

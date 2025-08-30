@@ -32,7 +32,7 @@ Before we get started installing the stack, we need to make sure that the follow
 │   └── provisioning/
 │       ├── dashboards/
 │       │   ├── dashboard.yml
-│       │   ├── rpi-monitoring.json
+│       │   ├── monitoring.json
 │       │   └── container-logs.json
 │       └── datasources/
 │           ├── datasource.yml

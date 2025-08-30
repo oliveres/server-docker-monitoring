@@ -21,7 +21,7 @@
       }
     ]
   },
-  "description": "Dashboard with details of the containers and host metrics for Raspberry Pi by Oijkn.",
+  "description": "Dashboard with details of the containers and host metrics.",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "gnetId": 10566,
@@ -3031,7 +3031,7 @@
     ]
   },
   "timezone": "browser",
-  "title": "Raspberry Pi & Docker Monitoring",
+  "title": "Server & Docker Monitoring",
   "uid": "VKtkKcAVz",
   "version": 2,
   "weekStart": ""

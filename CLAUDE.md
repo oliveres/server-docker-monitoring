@@ -61,7 +61,7 @@ All services communicate via internal Docker network. Only Grafana is exposed ex
 - `prometheus/prometheus.yml`: Scrape targets and intervals
 - `loki/loki-config.yaml`: Loki storage and retention settings
 - `promtail/promtail-config.yaml`: Docker log collection configuration
-- `grafana/provisioning/dashboards/rpi-monitoring.json`: System metrics dashboard
+- `grafana/provisioning/dashboards/monitoring.json`: System metrics dashboard
 - `grafana/provisioning/dashboards/container-logs.json`: Container logs dashboard
 - `grafana/provisioning/datasources/datasource.yml`: Prometheus datasource config
 - `grafana/provisioning/datasources/loki-datasource.yml`: Loki datasource config
